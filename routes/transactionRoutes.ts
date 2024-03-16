@@ -58,13 +58,13 @@ router.post("/", jwtAuthAdminMiddleware, async (req, res, next) => {
 });
 
 router.post("/user", async (req, res, next) => {
-  const { email, amount, note } = req.body;
+  const { receiver, amount, note } = req.body;
   const jwtUser = (req as any).user;
 
   try {
     const transaction = await createTransaction(
       jwtUser.email,
-      email,
+      receiver,
       amount,
       note
     );
