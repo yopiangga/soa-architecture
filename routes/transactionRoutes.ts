@@ -38,12 +38,12 @@ router.get("/:id", jwtAuthAdminMiddleware, async (req, res, next) => {
 });
 
 router.post("/", jwtAuthAdminMiddleware, async (req, res, next) => {
-  const { senderId, receiverId, amount, note } = req.body;
+  const { sender, receiver, amount, note } = req.body;
 
   try {
     const transaction = await createTransaction(
-      senderId,
-      receiverId,
+      sender,
+      receiver,
       amount,
       note
     );
@@ -58,13 +58,13 @@ router.post("/", jwtAuthAdminMiddleware, async (req, res, next) => {
 });
 
 router.post("/user", async (req, res, next) => {
-  const { receiverId, amount, note } = req.body;
+  const { email, amount, note } = req.body;
   const jwtUser = (req as any).user;
 
   try {
     const transaction = await createTransaction(
-      parseInt(jwtUser.id),
-      receiverId,
+      jwtUser.email,
+      email,
       amount,
       note
     );

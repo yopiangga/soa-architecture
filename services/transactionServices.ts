@@ -37,14 +37,14 @@ export async function getTransactions() {
 }
 
 export async function createTransaction(
-  senderId: number,
-  receiverId: number,
+  sender: string,
+  receiver: string,
   amount: number,
   note: string
 ) {
   const resSender = await prisma.user.findUnique({
     where: {
-      id: senderId,
+      email: sender,
     },
   });
 
@@ -54,7 +54,7 @@ export async function createTransaction(
 
   const resReceiver = await prisma.user.findUnique({
     where: {
-      id: receiverId,
+      email: receiver,
     },
   });
 
@@ -70,12 +70,12 @@ export async function createTransaction(
     data: {
       sender: {
         connect: {
-          id: senderId,
+          id: resSender.id,
         },
       },
       receiver: {
         connect: {
-          id: receiverId,
+          id: resReceiver.id,
         },
       },
       amount,
@@ -89,7 +89,7 @@ export async function createTransaction(
 
   await prisma.user.update({
     where: {
-      id: senderId,
+      id: resSender.id,
     },
     data: {
       saldo: resSender.saldo - amount,
@@ -98,7 +98,7 @@ export async function createTransaction(
 
   await prisma.user.update({
     where: {
-      id: receiverId,
+      id: resReceiver.id,
     },
     data: {
       saldo: resReceiver.saldo + amount,
