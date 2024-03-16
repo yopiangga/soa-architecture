@@ -5,7 +5,7 @@ import {
   getTransactions,
   createTransaction,
   deleteTransaction,
-  getTransactionsByUserId,
+  getTransactionsByUserEmail,
 } from "../services/transactionServices";
 import { jwtAuthAdminMiddleware } from "../middleware/jwtAuthAdmin";
 
@@ -97,7 +97,7 @@ router.get("/user/me", async (req, res, next) => {
   const jwtUser = (req as any).user;
 
   try {
-    const transactions = await getTransactionsByUserId(parseInt(jwtUser.id));
+    const transactions = await getTransactionsByUserEmail(jwtUser.email);
 
     res.json({
       message: "Get transactions by user id success",
@@ -108,14 +108,13 @@ router.get("/user/me", async (req, res, next) => {
   }
 });
 
-router.get("/user/:id", async (req, res, next) => {
-  const id = parseInt(req.params.id);
+router.get("/user/:email", async (req, res, next) => {
+  const email = req.params?.email ?? "";
 
   try {
-    const transactions = await getTransactionsByUserId(id);
-
+    const transactions = await getTransactionsByUserEmail(email);
     res.json({
-      message: "Get transactions by user id success",
+      message: "Get transactions by user email success",
       data: transactions,
     });
   } catch (error) {

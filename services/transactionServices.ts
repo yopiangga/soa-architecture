@@ -179,7 +179,7 @@ export async function deleteTransaction(id: number) {
 export async function getTransactionById(id: number) {
   const resTransaction = await prisma.transaction.findUnique({
     where: {
-      id,
+      id
     },
     include: {
       sender: true,
@@ -216,15 +216,19 @@ export async function getTransactionById(id: number) {
   return transaction;
 }
 
-export async function getTransactionsByUserId(userId: number) {
+export async function getTransactionsByUserEmail(email: string) {
   const resTransactions = await prisma.transaction.findMany({
     where: {
       OR: [
         {
-          idSender: userId,
+          sender: {
+            email,
+          }
         },
         {
-          idReceiver: userId,
+          receiver: {
+            email
+          }
         },
       ],
     },
